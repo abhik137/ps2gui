@@ -16,4 +16,14 @@ Provide the PS website username and password when prompted for. The credentials 
 The cookiejar should expire at the end of the session.
 Migration now works and new PS stations should update seamlessly without any loss of previously recorded notes/prefs.
 
-There are quite a few known bugs but time is such a bitch. Only let me know if something goes **horribly** wrong.
+There are quite a few(update:very few) known bugs but time is such a bitch. Only let me know if something goes **horribly** wrong.
+Backups *don't* hurt. Look for the database file at this location : ~/.ps2gui.
+Also tinkering with the code and changing directories is not a good idea ( unless, ofcourse, you know what you are doing )
+You can optionally link the app_home to Dropbox and make sure the database follows you on all your devices.
+
+I need a spell check for my terminal.
+
+If the GUI does not load correctly and the app exits with an error about ICE default I/O error handler, delete the 
+~/.ICEauthority file. 
+
+Last but not the least, the software is provided as is and without **any** warranty/guarantee.
