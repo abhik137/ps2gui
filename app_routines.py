@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys,os,sqlite3
 import cookielib, urllib2
-import getpass
-import re
+import re, shutil
 
+initial_run=0
 
 user_home = os.environ['HOME']
 app_home = user_home + "/.ps2gui"
@@ -71,13 +71,19 @@ def validate_and_fetch():
 
     ## Use a graphical tool to present the username password dialog. Worst case use Zenity.
     commandoutput = os.popen("zenity --password --username","r").readline()
+    if len(commandoutput.split('|')) != 2:
+        print "Please provide the username and password"
+        if initial_run:
+            shutil.rmtree(app_home)
+            sys.exit()
+        if os.path.exists(app_home + "/tempdatabase.db"):
+            os.remove(app_home + "/tempdatabase.db")
+        sys.exit()
 
     username=commandoutput.split("|")[0].strip('\n')
     password=commandoutput.split("|")[1].strip('\n')
-
     #username=raw_input("Username:")
     #password = getpass.getpass()
-
     payload="uid=%s&pwd=%s" % (username,password)
     page = opener.open("http://www.bits-pilani.ac.in:12355/student_notice_login.asp", payload)
     page.close()
@@ -105,6 +111,8 @@ def populate_empty_database(databasefile):
     if funcreturn:
         ## If this is true then the webpage has been downloaded and written in a convinient format to a text file.
         with open(ps_info_file,"r") as filep:
+            global initial_run
+            initial_run=0
             psinfocontent=filep.readlines()
             conn = sqlite3.connect(databasefile)
             counter=0
@@ -120,18 +128,24 @@ def populate_empty_database(databasefile):
             conn.commit()
             conn.close()
     else:
+        if initial_run:
+            shutil.rmtree(app_home)
+        if os.path.exists(app_home + "/tempdatabase.db"):
+            os.remove(app_home + "/tempdatabase.db")
         sys.exit()
 
 
 def check_create_database(databasefile):
+    print "The app home is %s" % app_home
+    if not os.path.exists(app_home):
+        os.makedirs(app_home)
+        global initial_run
+        initial_run = 1
 
-	if not os.path.exists(app_home):
-		os.makedirs(app_home)
-
-	if not os.path.exists(databasefile):
-		conn = sqlite3.connect(databasefile)
-		conn.execute('CREATE TABLE info(sno int,name text,location text, url text, pref int, notes text)')
-		conn.commit()
-		conn.close()
-		populate_empty_database(databasefile)
+    if not os.path.exists(databasefile):
+	   conn = sqlite3.connect(databasefile)
+	   conn.execute('CREATE TABLE info(sno int,name text,location text, url text, pref int, notes text)')
+	   conn.commit()
+	   conn.close()
+	   populate_empty_database(databasefile)
 
