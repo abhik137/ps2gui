@@ -50,6 +50,7 @@ class app_window(QtGui.QWidget):
 		self.table.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
 		self.upgrade_button.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)
 		self.table.setAlternatingRowColors(True)
+		self.table.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents);
 
 		self.table.itemClicked.connect(self.fetch_and_set_url)
 		self.table.itemChanged.connect(self.save_changes)
@@ -117,6 +118,7 @@ class app_window(QtGui.QWidget):
 			self.table.setItem(counter,3,QtGui.QTableWidgetItem(str(tup[4])))
 
 			self.table.setItem(counter,4,QtGui.QTableWidgetItem(str(tup[5])))
+
 			counter=counter+1
 
 
