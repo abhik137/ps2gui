@@ -16,7 +16,7 @@ class app_window(QtGui.QWidget):
 		self.layout=QtGui.QGridLayout(self)
 		self.table = QtGui.QTableWidget(self)
 		self.table.setColumnCount(5)
-		self.table.setMinimumWidth(600)
+		self.table.setMinimumWidth(573)
 		## check for the number of entries and make enough rows for them
 
 
@@ -39,17 +39,29 @@ class app_window(QtGui.QWidget):
 		self.layout.addWidget(self.checkbox,2,0)
 		self.layout.addWidget(self.pbar,2,1)
 		self.layout.addWidget(self.simplelabel,3,0)
-		self.layout.addWidget(self.upgrade_button,3,1)
+		self.layout.addWidget(self.upgrade_button,3,1,QtCore.Qt.AlignRight)
 
 		self.basic_chores()
+		self.table.setColumnWidth(0,35)
+		self.table.setColumnWidth(1,240)
+		self.table.setColumnWidth(2,80)
+		self.table.setColumnWidth(3,50)
+		self.table.setColumnWidth(4,150)
+		self.table.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
+		self.upgrade_button.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)
+		self.table.setAlternatingRowColors(True)
 
 		self.table.itemClicked.connect(self.fetch_and_set_url)
 		self.table.itemChanged.connect(self.save_changes)
 		self.checkbox.stateChanged.connect(self.set_blank)
 		self.upgrade_button.pressed.connect(self.upgrade_handler)
-
+		self.webView.loadFinished.connect(self.sane_scroll)
 
 		self.show()
+
+	def sane_scroll(self):
+		self.webView.page().mainFrame().setScrollBarValue(QtCore.Qt.Vertical, self.webView.page().mainFrame().scrollBarMaximum(QtCore.Qt.Vertical)/2)
+		self.webView.page().mainFrame().setScrollBarValue(QtCore.Qt.Horizontal, self.webView.page().mainFrame().scrollBarMaximum(QtCore.Qt.Horizontal)/2)
 
 	def basic_chores(self):
 		self.prefnums=[]
@@ -80,7 +92,7 @@ class app_window(QtGui.QWidget):
 			urlstring = "http://www.bits-pilani.ac.in:12355/"+urltup[0].encode('ascii','ignore')
 			# http://www.bits-pilani.ac.in:12355/
 			self.webView.setUrl(QtCore.QUrl(urlstring))
-
+			
 	def populate_window(self):
 		""" Reads contents from the ps info file and populates the QTableWidget"""
 		conn = sqlite3.connect(app_routines.db_file)
@@ -170,8 +182,9 @@ class app_window(QtGui.QWidget):
 		app_routines.check_create_database(tempdatabase)
 		if app_routines.migrate_database(app_routines.db_file,tempdatabase):
 			self.remove_all_rows()
+			print "This might take some time. Stand by."
 			self.basic_chores()
-			self.simplelabel.setText("PS database updated")
+			self.simplelabel.setText("<b>PS database updated</b>")
 
 		
 
