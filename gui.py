@@ -112,7 +112,7 @@ class app_window(QtGui.QWidget):
 			self.table.setItem(counter,1,nameitem)
 
 			locitem = QtGui.QTableWidgetItem(str(tup[2]))
-			nameitem.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled )
+			locitem.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled )
 			self.table.setItem(counter,2,locitem)
 
 			self.table.setItem(counter,3,QtGui.QTableWidgetItem(str(tup[4])))
