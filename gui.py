@@ -148,6 +148,9 @@ class app_window(QtGui.QWidget):
 			else:
 				self.simplelabel.setText("<b>The preference has already been taken. Reverting</b>")
 				item.setText("0")
+				data = 0
+				conn.execute("UPDATE info SET pref=(?) WHERE sno=(?)", (data,irowactual,) )
+				conn.commit()
 				conn.close()
 				
 
@@ -181,7 +184,6 @@ class app_window(QtGui.QWidget):
 		for tup in tempdata:
 			if int(tup[0]) != 0:
 				self.prefnums.append(tup[0])
-		conn.close()
 
 	def remove_all_rows(self):
 		while self.table.rowCount() > 0:
