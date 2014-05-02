@@ -130,6 +130,7 @@ class app_window(QtGui.QWidget):
 			counter=counter+1
 
 
+
 	def save_changes(self, item):
 		""" Writes changes made to the pref and notes column to the database"""
 		columnchanged = item.column()
@@ -138,15 +139,23 @@ class app_window(QtGui.QWidget):
 		if columnchanged == 3:
 			irow=item.row()
 			irowactual= int(self.table.item(irow,0).text())
-			data = int(item.text())
 
-			if not data < 1 and not data > self.count[0] and data not in self.prefnums:
-				conn.execute("UPDATE info SET pref=(?) WHERE sno=(?)", (data,irowactual,) )
-				conn.commit()
-				conn.close()
-				self.simplelabel.setText("<b>Preference updated.</b>")
-			else:
-				self.simplelabel.setText("<b>The preference has already been taken. Reverting</b>")
+			try:
+				data = int(item.text())
+				if not data < 1 and not data > self.count[0] and data not in self.prefnums:
+					conn.execute("UPDATE info SET pref=(?) WHERE sno=(?)", (data,irowactual,) )
+					conn.commit()
+					conn.close()
+					self.simplelabel.setText("<b>Preference updated.</b>")
+				else:
+					self.simplelabel.setText("<b>The preference has already been taken. Reverting</b>")
+					item.setText("0")
+					data = 0
+					conn.execute("UPDATE info SET pref=(?) WHERE sno=(?)", (data,irowactual,) )
+					conn.commit()
+					conn.close()
+			except:
+				self.simplelabel.setText("<b>Please enter a numeric value</b>")
 				item.setText("0")
 				data = 0
 				conn.execute("UPDATE info SET pref=(?) WHERE sno=(?)", (data,irowactual,) )
