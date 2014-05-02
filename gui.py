@@ -41,6 +41,7 @@ class app_window(QtGui.QWidget):
 
 		self.simplelabel = QtGui.QLabel("",self)
 		self.upgrade_button = QtGui.QPushButton("Update PS lists",self)
+		self.searchedit=QtGui.QLineEdit(self)
 
 		self.layout.addWidget(self.table,1,0)
 		self.layout.addWidget(self.webView,1,1)
@@ -48,6 +49,7 @@ class app_window(QtGui.QWidget):
 		self.layout.addWidget(self.pbar,2,1)
 		self.layout.addWidget(self.simplelabel,3,0)
 		self.layout.addWidget(self.upgrade_button,3,1,QtCore.Qt.AlignRight)
+		self.layout.addWidget(self.searchedit,2,0,QtCore.Qt.AlignRight)
 
 		self.basic_chores()
 		self.table.setColumnWidth(0,35)
@@ -55,18 +57,36 @@ class app_window(QtGui.QWidget):
 		self.table.setColumnWidth(2,80)
 		self.table.setColumnWidth(3,50)
 		self.table.setColumnWidth(4,150)
+
+		self.searchedit.setMinimumWidth(160)
+
 		self.table.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
 		self.upgrade_button.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)
 		self.table.setAlternatingRowColors(True)
-		self.table.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents);
+		#self.table.verticalHeader().setResizeMode(QtGui.QHeaderView.ResizeToContents);
 
 		self.table.itemClicked.connect(self.fetch_and_set_url)
 		self.table.itemChanged.connect(self.save_changes)
 		self.checkbox.stateChanged.connect(self.set_blank)
 		self.upgrade_button.pressed.connect(self.upgrade_handler)
 		self.webView.loadFinished.connect(self.sane_scroll)
-
+		self.searchedit.textChanged.connect(self.filter_rows)
 		self.show()
+
+	def filter_rows(self):
+		searchtext = self.searchedit.text()
+
+		if searchtext == "":
+			for itera in xrange(0,self.table.rowCount()):
+				self.table.setRowHidden(itera, False)
+		else:
+			for itera in xrange(0,self.table.rowCount()):
+				if str(searchtext).lower() not in str(self.table.item(itera,4).text()).lower():
+					self.table.setRowHidden(itera, True)
+			self.simplelabel.setText("<b>Searched for: %s</b>" % searchtext)
+
+
+
 
 	def sane_scroll(self):
 		self.webView.page().mainFrame().setScrollBarValue(QtCore.Qt.Vertical, self.webView.page().mainFrame().scrollBarMaximum(QtCore.Qt.Vertical)/2)
@@ -111,7 +131,7 @@ class app_window(QtGui.QWidget):
 
 		counter=0
 		for tup in contents:
-			sitem=QtGui.QTableWidgetItem(str(tup[0]))
+			sitem=MyTableWidgetItem(str(tup[0]))
 			sitem.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled )
 			self.table.setItem(counter,0,sitem)
 

@@ -136,7 +136,6 @@ def populate_empty_database(databasefile):
 
 
 def check_create_database(databasefile):
-    print "The app home is %s" % app_home
     if not os.path.exists(app_home):
         os.makedirs(app_home)
         global initial_run
