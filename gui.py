@@ -147,8 +147,11 @@ class app_window(QtGui.QWidget):
 					conn.commit()
 					conn.close()
 					self.simplelabel.setText("<b>Preference updated.</b>")
+				elif data == 0:
+					pass
 				else:
-					self.simplelabel.setText("<b>The preference has already been taken. Reverting</b>")
+					takenby = conn.execute("SELECT name FROM info where pref=(?)", (data,)).fetchone()[0]
+					self.simplelabel.setText("<b>The preference has already been taken by %s. Reverting</b>" % takenby)
 					item.setText("0")
 					data = 0
 					conn.execute("UPDATE info SET pref=(?) WHERE sno=(?)", (data,irowactual,) )
