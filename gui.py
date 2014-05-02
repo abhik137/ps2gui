@@ -59,6 +59,7 @@ class app_window(QtGui.QWidget):
 		self.table.setColumnWidth(4,150)
 
 		self.searchedit.setMinimumWidth(160)
+		self.searchedit.setPlaceholderText("Search notes")
 
 		self.table.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
 		self.upgrade_button.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)
@@ -79,6 +80,7 @@ class app_window(QtGui.QWidget):
 		if searchtext == "":
 			for itera in xrange(0,self.table.rowCount()):
 				self.table.setRowHidden(itera, False)
+			self.simplelabel.setText("Search cleared")
 		else:
 			for itera in xrange(0,self.table.rowCount()):
 				if str(searchtext).lower() not in str(self.table.item(itera,4).text()).lower():
