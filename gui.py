@@ -6,6 +6,14 @@ from PyQt4 import QtGui, QtCore, QtWebKit
 import sys, sqlite3, os
 import app_routines
 
+class MyTableWidgetItem(QtGui.QTableWidgetItem):
+    def __init__(self, number):
+        QtGui.QTableWidgetItem.__init__(self, number, QtGui.QTableWidgetItem.UserType)
+        self.__number = number
+
+    def __lt__(self, other):
+        return int(self.__number) < int(other.__number)
+
 class app_window(QtGui.QWidget):
 	def __init__(self):
 		""" Init block. Nothing interesting here."""
@@ -115,7 +123,7 @@ class app_window(QtGui.QWidget):
 			locitem.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled )
 			self.table.setItem(counter,2,locitem)
 
-			self.table.setItem(counter,3,QtGui.QTableWidgetItem(str(tup[4])))
+			self.table.setItem(counter,3,MyTableWidgetItem(str(tup[4])))
 
 			self.table.setItem(counter,4,QtGui.QTableWidgetItem(str(tup[5])))
 
