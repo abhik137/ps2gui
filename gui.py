@@ -176,9 +176,10 @@ class app_window(QtGui.QWidget):
 		if columnchanged == 3:
 			irow=item.row()
 			irowactual= int(self.table.item(irow,0).text())
-
+			itemname = self.table.item(irow,1).text()
 			try:
 				data = int(item.text())
+
 				if not data < 1 and not data > self.count[0] and data not in self.prefnums:
 					conn.execute("UPDATE info SET pref=(?) WHERE sno=(?)", (data,irowactual,) )
 					conn.commit()
@@ -188,7 +189,7 @@ class app_window(QtGui.QWidget):
 					pass
 				else:
 					takenby = conn.execute("SELECT name FROM info where pref=(?)", (data,)).fetchone()[0]
-					self.simplelabel.setText("<b>The preference has already been taken by %s. Reverting</b>" % takenby)
+					self.simplelabel.setText("<b>The preference has already been taken by %s. Reverting %s</b>" % (takenby,itemname,))
 					item.setText("0")
 					data = 0
 					conn.execute("UPDATE info SET pref=(?) WHERE sno=(?)", (data,irowactual,) )
