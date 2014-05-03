@@ -57,12 +57,14 @@ class app_window(QtGui.QWidget):
 		self.simplelabel = QtGui.QLabel("",self)
 		self.upgrade_button = QtGui.QPushButton("Update PS lists",self)
 		self.searchedit=QtGui.QLineEdit(self)
+		self.exportbutton = QtGui.QPushButton("Export",self)
 
 		self.layout.addWidget(self.table,1,0)
 		self.layout.addWidget(self.webView,1,1)
 		self.layout.addWidget(self.checkbox,2,0)
 		self.layout.addWidget(self.pbar,2,1)
 		self.layout.addWidget(self.simplelabel,3,0)
+		self.layout.addWidget(self.exportbutton,3,0,QtCore.Qt.AlignRight)
 		self.layout.addWidget(self.upgrade_button,3,1,QtCore.Qt.AlignRight)
 		self.layout.addWidget(self.searchedit,2,0,QtCore.Qt.AlignRight)
 
@@ -87,7 +89,12 @@ class app_window(QtGui.QWidget):
 		self.upgrade_button.pressed.connect(self.upgrade_handler)
 		self.webView.loadFinished.connect(self.sane_scroll)
 		self.searchedit.textChanged.connect(self.filter_rows)
+		self.exportbutton.pressed.connect(self.export_handler)
+
 		self.show()
+
+	def export_handler(self):
+		app_routines.export_prefs()
 
 	def filter_rows(self):
 		searchtext = self.searchedit.text()
