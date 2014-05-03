@@ -62,6 +62,20 @@ def parse_and_write(raw_content,file_name):
             str="%s##%s##%s\n" % (stations[itera][0],locations[itera],rurls[itera])
             fp.write(str)
 
+def export_prefs():
+    conn = sqlite3.connect(db_file)
+    raw_pref = conn.execute("select pref,sno+1 from info where pref != 0 order by pref asc").fetchall()
+
+    exportfile = user_home + "/finalpreflist"
+
+    if os.path.exists(exportfile):
+        os.remove(exportfile)
+
+    with open(exportfile,"w") as fp:
+        for itera in xrange(0,len(raw_pref)):
+            line ="%d %d\n" % (raw_pref[itera][0],raw_pref[itera][1])
+            fp.write(line)
+
 
 def validate_and_fetch():
     print "Trying to fetch the data."
