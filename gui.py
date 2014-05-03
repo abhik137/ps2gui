@@ -6,13 +6,28 @@ from PyQt4 import QtGui, QtCore, QtWebKit
 import sys, sqlite3, os
 import app_routines
 
-class MyTableWidgetItem(QtGui.QTableWidgetItem):
-    def __init__(self, number):
-        QtGui.QTableWidgetItem.__init__(self, number, QtGui.QTableWidgetItem.UserType)
-        self.__number = number
+# class QTableWidgetItem(QtGui.QTableWidgetItem):
+#     def __init__(self, number):
+#         QtGui.QTableWidgetItem.__init__(self, number, QtGui.QTableWidgetItem.UserType)
+#         self.__number = number
 
+#     def __lt__(self, other):
+#     	try:
+#     		int(self.__number)
+#         	return int(self.__number) < int(other.__number)
+#         except:
+#         	return self.__number < other.__number
+
+class MyTableWidgetItem(QtGui.QTableWidgetItem):
     def __lt__(self, other):
-        return int(self.__number) < int(other.__number)
+        if ( isinstance(other, QtGui.QTableWidgetItem) ):
+            my_value, my_ok = self.data(QtCore.Qt.EditRole).toInt()
+            other_value, other_ok = other.data(QtCore.Qt.EditRole).toInt()
+
+            if ( my_ok and other_ok ):
+                return my_value < other_value
+
+        return super(MyTableWidgetItem, self).__lt__(other)
 
 class app_window(QtGui.QWidget):
 	def __init__(self):
@@ -137,17 +152,17 @@ class app_window(QtGui.QWidget):
 			sitem.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled )
 			self.table.setItem(counter,0,sitem)
 
-			nameitem = QtGui.QTableWidgetItem(str(tup[1]))
+			nameitem = MyTableWidgetItem(str(tup[1]))
 			nameitem.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled )
 			self.table.setItem(counter,1,nameitem)
 
-			locitem = QtGui.QTableWidgetItem(str(tup[2]))
+			locitem = MyTableWidgetItem(str(tup[2]))
 			locitem.setFlags( QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled )
 			self.table.setItem(counter,2,locitem)
 
 			self.table.setItem(counter,3,MyTableWidgetItem(str(tup[4])))
 
-			self.table.setItem(counter,4,QtGui.QTableWidgetItem(str(tup[5])))
+			self.table.setItem(counter,4,MyTableWidgetItem(str(tup[5])))
 
 			counter=counter+1
 
