@@ -16,6 +16,19 @@ Provide the PS website username and password when prompted for. The credentials 
 The cookiejar should expire at the end of the session.
 Migration now works and new PS stations should update seamlessly without any loss of previously recorded notes/prefs.
 
+
+Filled the prefs. What next?
+============================
+
+Press the export buttona and the app should write to a file in the home folder. ( file's called finalpreflist )
+Now login to the PS2 website and navigate to the preference page. Wait for the page to load.
+Do not press any keys. No tabs. *Nothing*.
+
+With the page open, open up a terminal and run the fill_pref.sh ( bash fill_pref.sh , check for permissions 
+The script should fill the prefs. Verify and submit.
+)
+
+
 There are quite a few(update:very few) known bugs but time is such a bitch. Only let me know if something goes **horribly** wrong.
 Backups *don't* hurt. Look for the database file at this location : ~/.ps2gui.
 Also tinkering with the code and changing directories is not a good idea ( unless, ofcourse, you know what you are doing )
